@@ -1,27 +1,22 @@
 const commands = require('./commands');
 
 process.stdout.write('promt > ');
-// console.log(commands);
 
 process.stdin.on('data', (data) => {
-    let cmd = data.toString().toLowerCase().trim().split(" ");
+    let cmd = data.toString().trim().split(" ")[0];
+    let args = data.toString().trim().split(" ").slice(1).join(" ");
     
-    switch (cmd[0]) {
-        case "date":
-            commands.date();
-            break;
-        case "pwd":
-            commands.pwd();
-            break;
-        case "ls":
-            commands.ls();
-            break;
-            case "echo":
-            commands.echo(cmd);
-            break;
-        default:
-            process.stdout.write('\ninvalid command');
-            break;
+    if (commands[cmd]) {
+        console.log(args);
+        
+        commands[cmd](args);
+    } else {
+        process.stdout.write('\ninvalid command');
     }
 
 });
+
+//TODO refactor using this function to DRY things up
+let finish = (output) => {
+    process.stdout.write(output + '\nprompt > ');
+};
